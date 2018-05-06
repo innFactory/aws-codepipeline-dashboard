@@ -1,5 +1,7 @@
 # A simple dashboard to observe your aws codepipelines
 
+<img width="70%" src="screenshot1.png" alt="example"/>
+<img width="90%" src="screenshot2.png" alt="example"/>
 
 ## How to use
 
