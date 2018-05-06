@@ -21,6 +21,12 @@ npm start
 
 Got to http://localhost:3000/
 
+## Todo List
+- [x] Show states of codepipelines
+- [x] Refresh codepipelines every 8-20 seconds
+- [ ] Add pretty animations for each state
+- [ ] Support for custom grid sizes
+- [ ] Add theming
 
 ## Contributors
 
