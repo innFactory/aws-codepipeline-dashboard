@@ -1,8 +1,8 @@
-import * as React from 'react';
-import withStyles, { WithStyles, StyleRulesCallback } from 'material-ui/styles/withStyles';
 import { Paper, Typography } from 'material-ui';
-import * as DashboardActions from '../actions/dashboard';
 import { LinearProgress } from 'material-ui/Progress';
+import withStyles, { StyleRulesCallback, WithStyles } from 'material-ui/styles/withStyles';
+import * as React from 'react';
+import * as DashboardActions from '../actions/dashboard';
 import { PipelineState as PS } from '../model/model';
 
 export namespace PipelineState {
@@ -43,10 +43,14 @@ class PipelineState extends React.Component<WithStyles & PipelineState.Props, Pi
         const { isLoading } = this.state;
         return (
             <Paper className={classes.container} style={{ backgroundColor: this.getBackgroundColor() }}>
-                {isLoading && <LinearProgress color="secondary" />}
-                {this.renderName()}
-                {this.renderStage()}
-                {this.renderState()}
+                <div className={classes.progressBarWrapper}>
+                    {isLoading && <LinearProgress color="secondary" variant="query" />}
+                </div>
+                <div className={classes.textWrapper}>
+                    {this.renderName()}
+                    {this.renderStage()}
+                    {this.renderState()}
+                </div>
             </Paper>
         );
     }
@@ -57,7 +61,7 @@ class PipelineState extends React.Component<WithStyles & PipelineState.Props, Pi
         const name = pipelineState ? pipelineState.pipelineName : '';
 
         if (name) {
-            return (<Typography>{name}</Typography>);
+            return (<Typography variant="title">{name}</Typography>);
         } else { return null; }
     }
 
@@ -67,7 +71,13 @@ class PipelineState extends React.Component<WithStyles & PipelineState.Props, Pi
         const name = pipelineState ? pipelineState.stageName : '';
 
         if (name) {
-            return (<Typography>{name}</Typography>);
+            return (
+                <Typography
+                    variant="subheading"
+                    className={this.props.classes.stage}
+                >
+                    {name === 'UNKNOWN' ? 'Loading' : name}
+                </Typography>);
         } else { return null; }
     }
 
@@ -77,13 +87,19 @@ class PipelineState extends React.Component<WithStyles & PipelineState.Props, Pi
         const state = pipelineState ? pipelineState.state : '';
 
         if (state) {
-            return (<Typography>{state}</Typography>);
+            return (
+                <Typography
+                    variant="body2"
+                    className={this.props.classes.state}
+                >
+                    {state === 'UNKNOWN' ? 'Loading ...' : state}
+                </Typography>);
         } else { return null; }
     }
 
     getBackgroundColor() {
         switch (this.state.pipelineState.state) {
-            case 'Failed': return '#f7cdd2';
+            case 'Failed': return '#fc9faa'; // #f7cdd2
             case 'InProgress': return '#a6c1ed';
             case 'Succeeded': return '#b5f2b9';
             default: return null;
@@ -99,8 +115,25 @@ function getRndInteger(min: number, max: number) {
 const styles: StyleRulesCallback = theme => ({
     container: {
         width: '100%',
-        height: '100%'
+        height: '100%',
     },
+    progressBarWrapper: {
+        height: 10
+    },
+    textWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        padding: 10,
+        paddingBottom: 20
+    },
+    stage: {
+        flexGrow: 10,
+        paddingBottom: 10,
+    },
+    state: {
+        paddingBottom: 0
+    }
 });
 
 export default withStyles(styles)<PipelineState.Props>(PipelineState);

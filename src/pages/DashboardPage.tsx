@@ -1,17 +1,16 @@
+import { Button } from 'material-ui';
+import SettingsIcon from 'material-ui-icons/Settings';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
+import withStyles, { StyleRulesCallback, WithStyles } from 'material-ui/styles/withStyles';
 import * as React from 'react';
-import withStyles, { WithStyles, StyleRulesCallback } from 'material-ui/styles/withStyles';
-import { RootState } from '../reducers/index';
-import * as DashboardActions from '../actions/dashboard';
+import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { RouteComponentProps } from 'react-router';
+import { bindActionCreators } from 'redux';
+import * as DashboardActions from '../actions/dashboard';
 import { PipelineTable } from '../components';
 import PipelineState from '../components/PipelineState';
-import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-import { Button } from 'material-ui';
-import Dialog, { DialogTitle, DialogActions, DialogContent } from 'material-ui/Dialog';
-
-import SettingsIcon from 'material-ui-icons/Settings';
+import { RootState } from '../reducers/index';
 
 export namespace DashboardPage {
   export interface Props extends RouteComponentProps<void> {
@@ -22,12 +21,15 @@ export namespace DashboardPage {
 
   export interface State {
     showDialog: boolean;
+    layout: Array<any>;
   }
 }
 
 class DashboardPage extends React.Component<WithStyles & DashboardPage.Props, DashboardPage.State> {
   state = {
     showDialog: false,
+    height: 150,
+    layout: new Array<Object>(),
   };
 
   componentDidMount() {
@@ -57,23 +59,46 @@ class DashboardPage extends React.Component<WithStyles & DashboardPage.Props, Da
   }
 
   renderPipelineState() {
-    return this.props.pipelinesToObserve.map((p: any, i: number) => (
-      <div key={p.name} style={{ height: 180, width: 150 }}>
-        <PipelineState
-          key={i}
-          pipeline={p}
-          dashboardActions={this.props.dashboardActions}
-        />
-      </div>
-    ));
+
+    return this.props.pipelinesToObserve.map((p: any, i: number) => {
+      var layout = {
+        i: p.name,
+        minW: 1,
+        maxW: 3,
+        minH: 1,
+        maxH: 3,
+        x: 0,
+        y: i,
+        w: 2,
+        h: 1,
+        isResizable: true
+      };
+      return (
+        <div
+          key={p.name}
+          style={{}}
+          data-grid={layout}
+        >
+          <PipelineState
+            key={i}
+            pipeline={p}
+            dashboardActions={this.props.dashboardActions}
+          />
+        </div>
+      );
+    });
   }
 
   renderGrid() {
     return (
       <ResponsiveGridLayout
         width={window.innerWidth}
-        autoSize
         isResizable={false}
+        useCSSTransforms
+        rowHeight={this.state.height}
+        isRearrangeable={false}
+        preventCollision={true}
+        verticalCompact={false}
       >
         {this.renderPipelineState()}
       </ResponsiveGridLayout >
