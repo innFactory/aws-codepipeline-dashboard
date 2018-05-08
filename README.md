@@ -1,4 +1,4 @@
-# A simple dashboard to observe your aws codepipelines
+# A simple dashboard for monitoring your aws codepipelines
 
 <img width="70%" src="screenshot1.png" alt="example"/>
 <img width="90%" src="screenshot2.png" alt="example"/>
