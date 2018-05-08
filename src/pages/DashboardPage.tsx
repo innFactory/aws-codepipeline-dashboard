@@ -96,6 +96,9 @@ class DashboardPage extends React.Component<WithStyles & DashboardPage.Props, Da
         isResizable={false}
         useCSSTransforms
         rowHeight={this.state.height}
+        isRearrangeable={false}
+        preventCollision={true}
+        verticalCompact={false}
       >
         {this.renderPipelineState()}
       </ResponsiveGridLayout >
